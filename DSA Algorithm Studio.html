@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DSA Algorithm Studio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#14213d;--mute:#5b6784;--line:#dde3f0;--hero1:#1b2a5e;--hero2:#3a2a7a;--c1:#e08a00;--c2:#0a8f86;--c3:#c2410c;--c4:#6d3fd1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1530;--card:#17224a;--ink:#eef1fb;--mute:#a4aed0;--line:#2a3766;--hero1:#16205a;--hero2:#2b1d63;--c1:#ffb454;--c2:#4fd1c5;--c3:#ff9a6b;--c4:#b69cff}}
+:root[data-theme="dark"]{--bg:#0e1530;--card:#17224a;--ink:#eef1fb;--mute:#a4aed0;--line:#2a3766;--hero1:#16205a;--hero2:#2b1d63;--c1:#ffb454;--c2:#4fd1c5;--c3:#ff9a6b;--c4:#b69cff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Figtree,system-ui,sans-serif}
+header{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;padding:44px 20px 70px}
+.wrap{max-width:1100px;margin:0 auto}
+h1{font:800 clamp(2rem,6vw,3.6rem)/1.05 "Bricolage Grotesque",Figtree,sans-serif;margin:0 0 10px;letter-spacing:-.02em}
+header p{margin:0;max-width:60ch;opacity:.85}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin-top:-34px;padding:0 12px}
+.panel{max-width:1100px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 10px 30px rgba(10,20,60,.18)}
+.srch{display:flex;gap:8px}
+input[type=search]{flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 14px}
+input:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--c4);outline-offset:2px}
+button{font:inherit;cursor:pointer;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 2px;scrollbar-width:thin}
+.chips button{white-space:nowrap;font-weight:500}
+.chips button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chips b{opacity:.65;font-weight:500;margin-left:4px}
+main{max-width:1100px;margin:0 auto;padding:22px 14px 60px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--mute);margin:4px 2px 14px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px;align-items:start}
+details{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--mc);border-radius:12px;overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+summary::-webkit-details-marker{display:none}
+summary strong{font:600 1.02rem/1.3 "Bricolage Grotesque",Figtree,sans-serif}
+summary small{display:block;color:var(--mute);font-size:.82rem}
+summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--mc);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+.body{padding:0 16px 16px;border-top:1px dashed var(--line)}
+ol{margin:12px 0 0;padding-left:1.3rem}
+li{margin:5px 0}
+.t{display:inline-block;margin-top:12px;font-size:.84rem;border-radius:99px;padding:2px 10px;background:var(--bg);border:1px solid var(--line);color:var(--mute)}
+.m1{--mc:var(--c1)}.m2{--mc:var(--c2)}.m3{--mc:var(--c3)}.m4{--mc:var(--c4)}
+.empty{text-align:center;color:var(--mute);padding:50px 10px}
+footer{text-align:center;color:var(--mute);font-size:.85rem;padding-bottom:30px}
+@media (max-width:520px){header{padding-top:30px}.srch button{padding:9px 10px}}
+@media (prefers-reduced-motion:reduce){summary::after{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>DSA Algorithm Studio</h1><p>Every algorithm from your four module PDFs, one card each. Search a topic, pick a module, and open only what you need.</p></div></header>
+<div class="bar"><div class="panel">
+<div class="srch"><input id="q" type="search" placeholder="Search: queue, merge, BFS, hashing…" aria-label="Search algorithms"><button id="ex">Expand all</button><button id="co">Collapse all</button></div>
+<div class="chips" id="chips"></div>
+</div></div>
+<main><div class="meta"><span id="cnt"></span><span id="mn"></span></div><div class="grid" id="g"></div><div class="empty" id="e" hidden>No algorithm matches that search. Try a shorter word or choose All modules.</div></main>
+<footer>Study notes distilled from KTUNotes DSA PDFs. Always verify against your syllabus.</footer>
+<script>
+const MODS={1:"Module 1 · Basics, Stacks & Queues",2:"Module 2 · Linked Lists & Memory",3:"Module 3 · Sorting & Hashing",4:"Module 4 · Trees & Graphs"};
+const D=`1|Polynomial addition (arrays)|O(n+m)|Store each term as (coeff, expo) in arrays sorted by decreasing exponent~Set i=0, j=0, k=0 for poly1, poly2, result~While i<n1 and j<n2: if exponents are equal, add coefficients, store with that exponent, advance i, j, k~Else if poly1[i].expo is larger, copy poly1[i], advance i and k~Else copy poly2[j], advance j and k~Copy any leftover terms of poly1, then of poly2
+1|Sparse matrix: 3-tuple transpose|O(cols × terms)|Row 0 holds (rows, cols, non-zero count)~transpose[0] = (cols, rows, count)~Set k=1; for each column i from 0 to cols-1~Scan all terms j=1..n; if sparse[j].col == i, store (col, row, value) at transpose[k] and do k++
+1|Sparse matrix addition|O(tA+tB)|Check dimensions match; otherwise addition is not possible~Set i=1, j=1, k=1 and C[0] = (rows, cols, 0)~While i<=tA and j<=tB: copy the term that comes first in (row, col) order~If both are at the same position, add values; store only if sum != 0; advance i and j~Copy leftover terms of A, then of B~Set C[0].value = k-1
+1|Stack using array (push, pop, peek)|O(1) each|Keep stack[MAX] and top = -1 (empty)~PUSH: if top == MAX-1 print Overflow; else top++ and stack[top] = item~POP: if top == -1 print Underflow; else item = stack[top], top--, return item~PEEK: if top == -1 report empty; else return stack[top]~isEmpty: return top == -1
+1|Multiple stacks in one array|O(1) each|Fixed partition: stack i owns start[i]..end[i] and top[i] starts at start[i]-1~PUSH: if top[i] < end[i], top[i]++ and insert; else that stack overflows~POP: if top[i] >= start[i], read value and top[i]--; else underflow~Dynamic sharing: stack 1 grows left to right, stack 2 right to left; overflow only when top1+1 == top2
+1|Linear queue using array|O(1) each|Keep queue[MAX], front = -1, rear = -1~ENQUEUE: if rear == MAX-1 print Overflow; else rear++ and queue[rear] = item~DEQUEUE: if front == rear print Underflow; else front++ and return queue[front]~PEEK returns queue[front+1]; isEmpty is front == rear~Weakness: space freed at the front is never reused, so use a circular queue
+1|Circular queue using array|O(1) each|Start with front = 0, rear = 0; one slot is wasted to tell full from empty~isEmpty: front == rear. isFull: (rear+1) mod MAX == front~ENQUEUE: if full print Overflow; else rear = (rear+1) mod MAX and queue[rear] = item~DEQUEUE: if empty print Underflow; else front = (front+1) mod MAX and return queue[front]~PEEK: return queue[(front+1) mod MAX]
+1|Double ended queue (deque)|O(1) each|Start with front = -1, rear = -1; isEmpty when front == -1; isFull when (rear+1) mod MAX == front~Insert front: if full overflow; if empty front=rear=0; else front = (front-1+MAX) mod MAX; then deque[front] = item~Insert rear: if empty front=rear=0; else rear = (rear+1) mod MAX; then deque[rear] = item~Delete front: if empty underflow; output deque[front]; if front == rear reset both to -1, else front = (front+1) mod MAX~Delete rear: output deque[rear]; if front == rear reset both to -1, else rear = (rear-1+MAX) mod MAX
+1|Infix to postfix conversion|O(n)|Scan the infix expression left to right with an operator stack~Operand: append to output~(: push on the stack~): pop to output until ( is found, then discard the (~Operator: while the stack top has precedence >= the current operator, pop to output; then push the operator~At the end, pop all remaining operators to output~Precedence: ^ is 3, * and / are 2, + and - are 1
+1|Evaluate a postfix expression|O(n)|Scan the postfix expression left to right with an operand stack~Operand: push it~Operator: pop val2 (first), then val1 (second); compute val1 op val2; push the result~At the end the single value left on the stack is the answer~Example: 7 8 + 3 2 + / gives 15 / 5 = 3
+2|Singly linked list: insertion|O(1) begin, O(n) end/position|Begin: newNode.next = head; head = newNode~End: if head is NULL set head = newNode; else walk temp to the last node and set temp.next = newNode~Position p: if p==1 insert at begin; else move temp p-2 times (stop if NULL), then newNode.next = temp.next and temp.next = newNode
+2|Singly linked list: deletion|O(1) begin, O(n) end/position|Begin: if head is NULL report empty; temp = head; head = head.next; free temp~End: if one node, free it and set head = NULL; else walk to the second last node, free its next, set next = NULL~Position p: if p==1 delete at begin; else move temp to node p-1, set deleteNode = temp.next, temp.next = deleteNode.next, free deleteNode
+2|Singly linked list: traversal|O(n)|If head is NULL print List is empty~Set temp = head~While temp != NULL: print temp.data and move temp = temp.next
+2|Stack using linked list|O(1) each|Set top = NULL~PUSH: create node, newNode.next = top, top = newNode~POP: if top is NULL print Underflow; else temp = top, save its data, top = top.next, free temp, return data~PEEK: if top is NULL report empty; else output top.data
+2|Queue using linked list|O(1) each|Keep front and rear pointers, both NULL at start~ENQUEUE: create node with next = NULL; if front is NULL set front = rear = node; else rear.next = node and rear = node~DEQUEUE: if front is NULL underflow; else temp = front, front = front.next; if front becomes NULL set rear = NULL; free temp and return data
+2|Polynomial addition (linked list)|O(n+m)|Both lists are sorted by decreasing exponent; Result starts empty~While both pointers are non-NULL: larger exponent term is copied and its pointer advances~Equal exponents: sum the coefficients, add a node only if sum != 0, advance both~Copy remaining terms of P1, then of P2
+2|Polynomial multiplication (linked list)|O(n×m)|Start with an empty Result list~For each term t1 in poly1 and each term t2 in poly2: coeff = t1.coeff × t2.coeff, exp = t1.exp + t2.exp~Insert into Result; if a node with the same exponent exists, add the coefficients, else append a new node~Display Result. Example: (3x²+5x)(2x+4) = 6x³+22x²+20x
+2|Doubly linked list: insertion|O(1) begin, O(n) end/position|Node layout: prev, data, next~Begin: newNode.prev = NULL; newNode.next = head; if head != NULL then head.prev = newNode; head = newNode~End: walk to the last node; temp.next = newNode; newNode.prev = temp~Position p: move temp to node p-1; newNode.next = temp.next; if temp.next != NULL then temp.next.prev = newNode; temp.next = newNode; newNode.prev = temp
+2|Doubly linked list: deletion|O(1) begin, O(n) end|Begin: if head is NULL report empty; temp = head; head = head.next; if head != NULL then head.prev = NULL; free temp~End: if head is NULL report empty; if one node free it and set head = NULL; else walk to the last node, set last.prev.next = NULL and free last
+2|Circular linked list: insertion|O(n)|Last node points back to head; there is no NULL~Begin: if empty, newNode.next = newNode and it becomes head; else newNode.next = head, find the last node, last.next = newNode, head = newNode~End: if empty do the same single-node step; else find the last node, last.next = newNode, newNode.next = head
+2|Circular linked list: deletion|O(n)|Begin: if empty report it; find the last node; if only one node free it and return NULL; else last.next = head.next, free old head, head = head.next~End: find the last and second last nodes; if only one node free it; else secondLast.next = head and free the last node
+2|First fit allocation|O(n)|Start from the head of the free-block list~Take the first block whose size >= request~Exact match: remove the node. Larger: split by moving start += request and size -= request~If no block fits, the request fails (or triggers compaction)~Example: 200, 500, 300, 600 KB with a 250 KB request uses the 500 KB block
+2|Best fit allocation|O(n)|Traverse the entire free list~Among blocks large enough, pick the one leaving the smallest leftover~Exact match: remove the block. Larger: split it~Example: for 250 KB the 300 KB block is chosen (50 KB left over)
+2|Worst fit allocation|O(n)|Traverse the entire free list~Pick the largest block that fits the request~Exact match: remove the block. Larger: split it~Example: for 250 KB the 600 KB block is chosen
+2|Garbage collection and compaction|O(n)|Garbage collection: scan the memory-block list and mark blocks that are no longer used as free~Compaction: move used blocks together and push free space to one side~Merge all free blocks into a single large block~Example: [Used 200][Free 150][Used 300][Free 100][Free 200] becomes [Used 200][Used 300][Free 450]
+3|Selection sort|O(n²)|For position i from 0 to n-2, assume A[i] is the minimum~Compare it with every later element; swap when a smaller one is found~After each pass the next smallest value sits at index i~The last element is automatically in place
+3|Insertion sort|O(n²), best O(n)|Treat index 0 as the sorted part~Take the next element as key~Shift every larger element in the sorted part one place right~Insert key into the gap; repeat for each remaining element
+3|Merge sort|O(n log n)|MergeSort(low, high): if low >= high stop; mid = (low+high)/2; sort both halves; Merge(low, mid, high)~Merge: i = low, j = mid+1, k = low~While both halves have items copy the smaller (a[i] <= a[j]) into temp[k]~Copy leftovers of either half~Copy temp[low..high] back into a
+3|Quick sort|O(n log n) avg, O(n²) worst|QuickSort(A, low, high): if low < high, j = partition(A, low, high), then sort A[low..j-1] and A[j+1..high]~Partition: pivot = A[low], i = low, j = high~Move i right while A[i] <= pivot; move j left while A[j] > pivot; if i < j swap A[i], A[j]~Repeat until i >= j, then swap pivot with A[j] and return j
+3|Heap sort|O(n log n)|BuildMaxHeap: for i = n/2-1 down to 0, Heapify(A, n, i)~Heapify(A, n, i): largest = i; compare with left child 2i+1 and right child 2i+2; if a child is larger swap and recurse on it~Sort: for i = n-1 down to 1 swap A[0] with A[i], then Heapify(A, i, 0)
+3|Hash functions|O(1)|Division: H(k) = k mod m, with m prime (102 mod 23 = 10)~Mid square: square the key and extract middle digits (65² = 4225 gives 22)~Folding: split key into parts, add them (fold shifting or boundary)~Digit analysis: pick and rearrange digits that spread keys most evenly
+3|Linear probing|O(1) avg|Compute u = H(k)~Insert at the first free slot of (u+i) mod m for i = 0..m-1~Search follows the same probe sequence until the key or an empty slot is met~Deleted slots are marked deleted: insert may reuse them, search does not stop there
+3|Quadratic probing|O(1) avg|Compute u = H(k)~Insert at the first free slot of (u+i²) mod m for i = 0..m-1~Reduces clustering compared with linear probing, but may fail to reach every slot
+3|Double hashing|O(1) avg|Use two hash functions H1(k) and H2(k)~u = H1(k), v = H2(k)~Insert at the first free slot of (u + v×i) mod m for i = 0..m-1
+3|Chaining (open hashing)|O(1) avg|Each table index holds a linked list of keys~Insert: compute H(k) and add the key to that list~Search: compute H(k) and scan only that list~Colliding keys simply share a chain
+4|Binary tree traversals|O(n)|Inorder: Inorder(left), visit root, Inorder(right)~Preorder: visit root, Preorder(left), Preorder(right)~Postorder: Postorder(left), Postorder(right), visit root~Each runs only while the node is not NULL~Example tree 15, 2, 6, 10, 20, 30, 40: preorder 15 2 10 20 6 30 40, postorder 10 20 2 30 40 6 15
+4|Tree to binary tree (LCRS)|O(n)|Left child pointer: the node's first (leftmost) child~Right pointer: the node's next sibling~Rotate sibling links 45 degrees clockwise to draw the degree-2 binary tree
+4|Binary tree in an array|O(1) index|Store nodes level by level; the root is at index 1~Parent of i = floor(i/2) for i != 1~Left child = 2i if 2i <= n; right child = 2i+1 if 2i+1 <= n~Wastes memory if the tree is not complete
+4|BST search|O(h)|ptr = root, flag = 0~While ptr != NULL and flag == 0: if ptr.data == item set flag = 1; else if ptr.data < item go right; else go left~Print found if flag == 1, otherwise not found
+4|BST insertion|O(h)|If the tree is empty, create the node and make it root~Otherwise search for item; if found print already exists~Track the parent while moving down; when ptr becomes NULL create the new node~If item < parent.data make it the left child, else the right child
+4|BST deletion|O(h)|Search for the node to delete; if absent print not exist~Leaf: set the parent pointer to NULL~One child: connect the parent directly to that child~Two children: find the inorder successor (smallest in right subtree), copy its data into the node, then delete the successor
+4|Breadth first search (BFS)|O(V+E)|Mark all vertices unvisited; mark start u visited and enqueue it~While the queue is not empty: dequeue v, and for each unvisited neighbour mark it visited and enqueue~If unvisited vertices remain, start again from one of them~Uses a queue; gives shortest path by edge count in unweighted graphs
+4|Depth first search (DFS)|O(V+E)|Push the start vertex on a stack; mark all vertices unvisited~While the stack is not empty: pop v~If v is unvisited, mark it visited and push each unvisited neighbour~Uses a stack; used for connected components, topological sort and bridges
+4|Graph representations|O(V²) matrix, O(V+E) list|Adjacency matrix: A[i][j] = 1 if edge (i,j) exists, else 0; weight w for weighted graphs~Adjacency list: array of linked lists; entry i lists the vertices adjacent to vertex i~Set form: store V (vertices) and E (edges) as sets`;
+const A=D.split("\n").map((l,i)=>{const p=l.split("|");return{id:i,m:+p[0],t:p[1],c:p[2],s:p[3].split("~")}});
+const g=document.getElementById("g"),q=document.getElementById("q"),chips=document.getElementById("chips");
+let mod=0;
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+function chipBar(){const b=[[0,"All modules",A.length],...[1,2,3,4].map(m=>[m,MODS[m].split(" · ")[0]+" "+MODS[m].split(" · ")[1].split(",")[0].split(" &")[0],A.filter(a=>a.m==m).length])];
+chips.innerHTML=b.map(x=>`<button data-m="${x[0]}" aria-pressed="${x[0]==mod}">${esc(x[1])}<b>${x[2]}</b></button>`).join("");}
+function render(){const t=q.value.trim().toLowerCase();
+const r=A.filter(a=>(!mod||a.m==mod)&&(!t||(a.t+" "+a.s.join(" ")+" "+a.c).toLowerCase().includes(t)));
+g.innerHTML=r.map(a=>`<details class="m${a.m}"><summary><span><strong>${esc(a.t)}</strong><small>${MODS[a.m]}</small></span></summary><div class="body"><ol>${a.s.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><span class="t">Time: ${esc(a.c)}</span></div></details>`).join("");
+document.getElementById("cnt").textContent=r.length+" of "+A.length+" algorithms";
+document.getElementById("mn").textContent=mod?MODS[mod]:"All modules";
+document.getElementById("e").hidden=r.length>0;chipBar();}
+chips.addEventListener("click",e=>{const b=e.target.closest("button");if(b){mod=+b.dataset.m;render();}});
+q.addEventListener("input",render);
+document.getElementById("ex").onclick=()=>g.querySelectorAll("details").forEach(d=>d.open=true);
+document.getElementById("co").onclick=()=>g.querySelectorAll("details").forEach(d=>d.open=false);
+render();
+</script>
+</body>
+</html>
